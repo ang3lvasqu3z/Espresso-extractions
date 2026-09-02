@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Espresso Extractions",
+        "description": "Set up manual espresso extraction tracking."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Only one Espresso Extractions instance is supported."
+    }
+  }
+}

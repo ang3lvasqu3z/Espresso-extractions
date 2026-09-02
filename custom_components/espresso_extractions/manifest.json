@@ -1,0 +1,14 @@
+{
+  "domain": "espresso_extractions",
+  "name": "Espresso Extractions",
+  "version": "0.1.0",
+  "documentation": "https://github.com/OWNER/espresso-extractions",
+  "issue_tracker": "https://github.com/OWNER/espresso-extractions/issues",
+  "requirements": [],
+  "codeowners": [],
+  "config_flow": true,
+  "single_config_entry": true,
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "dependencies": ["http", "panel_custom"]
+}
