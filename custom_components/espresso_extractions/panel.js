@@ -297,15 +297,23 @@ class EspressoExtractionsPanel extends HTMLElement {
   sessionStatuses() {
     const statuses = {};
     const norm = (v) => String(v || "").trim().toLowerCase();
+    this.bags.forEach((bag) => {
+      (bag.sessions || []).forEach((s) => {
+        if (s.session_id) statuses[s.session_id] = "done";
+      });
+      if (bag.active_session_id && bag.completed_at == null) statuses[bag.active_session_id] = "progress";
+      if (bag.completed_at) statuses[bag.id] = "done";
+    });
     this.extractions.forEach((item) => {
       const sid = item.bag_session_id || item.bag_id;
+      if (sid in statuses) return;
       const bag = this.bags.find((b) => b.id === item.bag_id) || null;
       const snap = item.bag_snapshot;
       const name = bag?.name || snap?.name || "Unknown";
       const roaster = bag?.roaster || snap?.roaster || "";
       const match = this.bags.find((b) => norm(b.name) === norm(name) && norm(b.roaster) === norm(roaster) && norm(name));
       const st = !match ? "deleted" : (match?.completed_at ?? snap?.completed_at) ? "done" : "progress";
-      if (!(sid in statuses)) statuses[sid] = st;
+      statuses[sid] = st;
     });
     return statuses;
   }
@@ -647,7 +655,7 @@ nav{display:flex;gap:8px;background:rgba(255,255,255,0.06);padding:6px;border-ra
 .nav-tab:hover{background:rgba(255,255,255,0.08);color:var(--primary-text-color)}
 .nav-tab.active{background:var(--primary-color);color:#fff;box-shadow:0 4px 14px rgba(0,0,0,0.25)}
 .nav-tab ha-icon{--mdc-icon-size:18px}
-.toolbar,.filters{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:16px 0;padding:16px;border-radius:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+.toolbar,.filters{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:16px 0;padding:16px;border-radius:16px;background:transparent;border:1px solid rgba(255,255,255,0.08);box-shadow:0 10px 30px rgba(0,0,0,0.2)}
 .bag-toolbar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:space-between;margin:16px 0;padding:18px 20px;border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03));border:1px solid rgba(255,255,255,0.12);box-shadow:0 12px 30px rgba(0,0,0,0.2)}
 .bag-feature{display:flex;flex-direction:column;gap:2px;min-width:0;margin-right:auto}
 .bag-eyebrow{font-size:10px;letter-spacing:2px;color:var(--primary-color);font-weight:700}
@@ -714,11 +722,12 @@ textarea{min-height:70px;grid-column:1/-1;resize:vertical}
 .settings-overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px)}
 .settings-overlay .modal{width:100%;max-width:420px}
 .bag-details-title{margin:18px 0 0;font-size:14px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--secondary-text-color)}
-.bag-settings{margin-top:8px;padding:16px;border:1px solid rgba(255,255,255,0.1);border-radius:14px;background:rgba(255,255,255,0.03)}
+.bag-settings{margin-top:8px;padding:16px;border:1px solid rgba(255,255,255,0.1);border-radius:14px;background:transparent}
 .bag-settings h3{margin:0 0 12px;font-size:16px;color:var(--primary-color)}
 .settings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:4px 0 16px}
 .settings-group{display:flex;flex-direction:column;gap:12px;min-width:0}
 .settings-group .group-label,.presets-head .group-label{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--secondary-text-color)}
+.bag-settings label{background:transparent;border-radius:0;padding:0;margin:0}
 .field-label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:600;color:var(--secondary-text-color);margin:0}
 .field-label input,.field-label select{font-size:15px;color:var(--primary-text-color)}
 .recipe-group{max-width:none;margin-bottom:4px}
@@ -748,7 +757,7 @@ th,td{text-align:left;padding:12px 14px;border-bottom:1px solid rgba(255,255,255
 th{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--secondary-text-color);background:rgba(255,255,255,0.04)}
 tr:last-child td{border-bottom:0}
 .delete{background:var(--error-color,#e27666)}
-.filters label{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--secondary-text-color);margin:0}
+.filters label{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--secondary-text-color);margin:0;background:transparent;border-radius:0;padding:0}
 .chart-card h2{margin:0 0 10px;font-size:15px;color:var(--primary-text-color)}
 th{cursor:pointer;user-select:none}
 th[data-sort]:hover{color:var(--primary-color)}
